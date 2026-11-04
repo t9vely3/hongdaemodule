@@ -51,6 +51,8 @@
 #aix-admin-fab{position:fixed;bottom:24px;right:25px;z-index:99999;background:#102b47;color:white;border:1px solid #ffffff40;border-radius:15px;padding:14px 20px;font-size:14px;letter-spacing:-.02em;font-family:inherit;font-weight:800;box-shadow:0 9px 28px #06172844;cursor:pointer}
 #aix-admin-panel{position:fixed;z-index:100000;top:15px;right:15px;width:min(385px,calc(100vw - 30px));max-height:calc(100vh - 30px);overflow-y:auto;display:none;background:#fff;color:#17324a;border:1px solid #dce6ed;border-radius:20px;box-shadow:0 18px 65px #08172550;font-family:inherit;padding:22px}
 #aix-admin-panel.open{display:block}#aix-admin-panel h2{margin:0 0 5px;font-size:20px;color:#112e47}#aix-admin-panel p{color:#62768b;font-size:12px;line-height:1.7;margin:0 0 15px}#aix-admin-panel .aix-line{height:1px;background:#e8edf2;margin:16px 0}#aix-admin-panel button{border:0;background:#f0f4f7;color:#17324a;cursor:pointer;font-weight:800;padding:12px 13px;border-radius:10px;font-family:inherit;font-size:12px}#aix-admin-panel button.primary{background:#005192;color:white}#aix-admin-panel button.light{background:#eef6fa;color:#005192}#aix-admin-panel .aix-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}#aix-admin-panel .aix-actions button{min-height:42px}#aix-admin-panel .aix-wide{width:100%;margin-top:8px}#aix-admin-panel .aix-status{font-size:12px;padding:10px;border-radius:9px;background:#f1f6fb;margin-top:13px;line-height:1.5}#aix-admin-panel .aix-small{font-size:11px;color:#8492a0;margin-top:10px;line-height:1.6}#aix-admin-panel .aix-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}#aix-admin-panel .aix-close{background:transparent;padding:4px 8px;font-size:22px}#aix-admin-panel .aix-switch{display:flex;align-items:center;gap:9px;padding:11px 0;font-size:13px;font-weight:800}#aix-admin-panel .aix-switch input{height:18px;width:18px;accent-color:#005192}#aix-admin-panel label.aix-label{font-size:12px;font-weight:800;display:block;margin-bottom:7px}#aix-admin-panel select{width:100%;font-family:inherit;border:1px solid #cedbe7;border-radius:10px;padding:10px;font-size:13px}
+
+#aix-admin-panel .aix-editor-control{display:grid;gap:6px;margin:10px 0}#aix-admin-panel .aix-editor-control label{font-size:12px;font-weight:800}#aix-admin-panel input[type=color]{width:100%;height:37px;border:1px solid #d2dce5;border-radius:8px;cursor:pointer;background:white}#aix-admin-panel input[type=number],#aix-admin-panel textarea,#aix-admin-panel input[type=text]{width:100%;padding:9px;border:1px solid #d2dce5;border-radius:8px;font-family:inherit}#aix-admin-panel .aix-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}#aix-admin-panel .aix-grid3 button{padding:10px 4px}#aix-admin-panel .aix-picked{padding:9px;background:#f3f7fb;border-radius:9px;font-size:12px;color:#17324a;overflow-wrap:anywhere}#aix-admin-panel button.danger{color:#b83340;background:#fff1f2}#aix-admin-panel .aix-edit-heading{font-size:13px;color:#102b47;margin:0 0 5px}
 </style>
 </head>
 <body>
@@ -2409,6 +2411,17 @@
   <label class="aix-label" for="aix-version">편집 시안</label>
   <select id="aix-version" onchange="AIXEditor.changeVersion(this.value)"><option value="main">기본안</option><option value="a">시안 A</option><option value="b">시안 B</option></select>
   <div class="aix-line"></div>
+  <h3 class="aix-edit-heading">선택 요소 · 구조 / 디자인 편집</h3>
+  <p>편집 모드를 켠 뒤 왼쪽 화면에서 원하는 카드나 글자를 클릭하세요. 아래 '편집 범위'를 바꾸면 카드 전체, 섹션 전체도 조작할 수 있습니다.</p>
+  <div class="aix-picked" id="aix-picked">선택된 요소 없음</div>
+  <div class="aix-editor-control"><label for="aix-scope">편집 범위</label><select id="aix-scope" onchange="AIXEditor.scope(this.value)"><option value="self">선택한 요소</option><option value="card">카드 / 박스 전체</option><option value="section">섹션 / 단계 전체</option><option value="parent">바로 위 부모 요소</option></select></div>
+  <div class="aix-grid3"><button type="button" onclick="AIXEditor.move(-1)">↑ 위 / 앞</button><button type="button" onclick="AIXEditor.move(1)">↓ 아래 / 뒤</button><button type="button" onclick="AIXEditor.duplicate()">＋ 복제</button></div>
+  <div class="aix-grid3" style="margin-top:6px"><button type="button" onclick="AIXEditor.addText()">＋ 글상자</button><button type="button" onclick="AIXEditor.editText()">✎ 내용 편집</button><button class="danger" type="button" onclick="AIXEditor.remove()">삭제</button></div>
+  <div class="aix-editor-control"><label>배경색 / 글자색</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><input aria-label="배경색" type="color" id="aix-bg-color" value="#ffffff" onchange="AIXEditor.style('backgroundColor',this.value)"><input aria-label="글자색" type="color" id="aix-text-color" value="#17324a" onchange="AIXEditor.style('color',this.value)"></div></div>
+  <div class="aix-editor-control"><label>글씨 크기(px)</label><input id="aix-font-size" type="number" min="8" max="90" value="14" onchange="AIXEditor.style('fontSize',this.value+'px')"></div>
+  <div class="aix-editor-control"><label>안쪽 여백(px)</label><input id="aix-padding" type="number" min="0" max="120" value="12" onchange="AIXEditor.style('padding',this.value+'px')"></div>
+  <button type="button" class="aix-wide" onclick="AIXEditor.clearStyles()">선택 요소의 직접 지정 스타일 초기화</button>
+  <div class="aix-line"></div>
   <div class="aix-actions"><button class="primary" type="button" onclick="AIXEditor.save()">✓ 현재 시안 저장</button><button class="light" type="button" onclick="AIXEditor.exportFile()">↓ HTML 파일 저장</button><button type="button" onclick="AIXEditor.reset()">↩ 저장 내용 되돌리기</button><button type="button" onclick="AIXEditor.restoreOriginal()">원본으로 되돌리기</button></div>
   <div class="aix-status" id="aix-edit-status" role="status">편집하려면 '화면 직접 편집하기'를 켜세요.</div>
   <div class="aix-small">※ '현재 시안 저장'은 이 브라우저에만 보관됩니다. 다른 사람과 공유하려면 반드시 'HTML 파일 저장'으로 내려받은 파일을 전달하세요. GitHub 공개 사이트 변경은 내려받은 HTML 파일을 저장소에 업로드해야 합니다.</div>
@@ -2419,6 +2432,7 @@
 var frames=Array.from(document.querySelectorAll('.doc-frame'));
 var original=frames.map(function(f){return f.getAttribute('srcdoc');});
 var current='main', edit=false, dirty=false, loading=false;
+var chosen=null, target=null, activeFrame=null, currentScope='self';
 var ROOTKEY='AIX_EDITOR_V3_GANGNAM_20261104_';
 var select='h1,h2,h3,h4,h5,h6,p,li,td,th,dt,dd,footer,.ctitle,.chours,.cdesc,.cnote,.csub,.cold,.ft,.fhours,.fcard .fold,.pchip,.point,.kicker,.vgroup,.scroll-hint,.sub,.flabel,.brand,.sec-head,.eff,.after';
 function key(){return ROOTKEY+current;}
@@ -2426,29 +2440,57 @@ function status(msg){document.getElementById('aix-edit-status').textContent=msg;
 function stored(){try{return JSON.parse(localStorage.getItem(key())||'null')}catch(e){return null}}
 function setStored(v){try{localStorage.setItem(key(),JSON.stringify(v));return true}catch(e){status('저장 실패: 브라우저 저장 공간 또는 권한을 확인하세요.');return false}}
 function readDoc(f){try{return f.contentDocument||f.contentWindow.document}catch(e){return null}}
-function removeEditing(doc){if(!doc)return;doc.querySelectorAll('[data-aix-editable]').forEach(function(e){e.removeAttribute('contenteditable');e.removeAttribute('data-aix-editable');e.removeAttribute('spellcheck');});var css=doc.getElementById('aix-inline-editor-style');if(css)css.remove();if(doc.body)doc.body.removeAttribute('data-aix-input-bound');}
+function removeEditing(doc){if(!doc)return;doc.querySelectorAll('[data-aix-editable]').forEach(function(e){e.removeAttribute('contenteditable');e.removeAttribute('data-aix-editable');e.removeAttribute('spellcheck');});var css=doc.getElementById('aix-inline-editor-style');if(css)css.remove();doc.querySelectorAll('[data-aix-picked]').forEach(function(e){e.removeAttribute('data-aix-picked');});if(doc.body){doc.body.removeAttribute('data-aix-input-bound');doc.body.removeAttribute('data-aix-select-bound');}}
 function serialize(f){var d=readDoc(f);if(!d||!d.documentElement)return f.getAttribute('srcdoc')||'';var c=d.documentElement.cloneNode(true);removeEditing(c);return '<!DOCTYPE html>\n'+c.outerHTML;}
 function cleanDoc(html){var doc=new DOMParser().parseFromString(html,'text/html');removeEditing(doc);return '<!DOCTYPE html>\n'+doc.documentElement.outerHTML;}
 function snapshots(){return frames.map(function(f){return serialize(f);});}
 function snapshotCurrent(){return snapshots();}
 function toggleFrame(f){var d=readDoc(f);if(!d)return;
   if(!edit){removeEditing(d);return;}
-  var css=d.getElementById('aix-inline-editor-style');if(!css){css=d.createElement('style');css.id='aix-inline-editor-style';css.textContent='[data-aix-editable]{outline:1px dashed rgba(0,133,205,.32);outline-offset:2px;cursor:text}[data-aix-editable]:focus{outline:2px solid #0085CD;background:rgba(0,133,205,.05);border-radius:3px}';d.head.appendChild(css);}
+  var css=d.getElementById('aix-inline-editor-style');if(!css){css=d.createElement('style');css.id='aix-inline-editor-style';css.textContent='[data-aix-editable]{outline:1px dashed rgba(0,133,205,.32);outline-offset:2px;cursor:text}[data-aix-editable]:focus{outline:2px solid #0085CD;background:rgba(0,133,205,.05);border-radius:3px}[data-aix-picked]{outline:3px solid #f6ab00!important;outline-offset:3px!important}';d.head.appendChild(css);}
   d.querySelectorAll(select).forEach(function(el){
     if(el.closest('script,style,button,a,[data-aix-editable]'))return;
     if(el.querySelector('h1,h2,h3,h4,h5,h6,p,li,td,th,.ctitle,.chours,.cdesc,.cnote'))return;
     if(!el.textContent.trim())return;
     el.setAttribute('contenteditable','true');el.setAttribute('data-aix-editable','1');el.setAttribute('spellcheck','false');
   });
+  if(!d.body.dataset.aixSelectBound){d.body.dataset.aixSelectBound='1';d.addEventListener('click',function(ev){
+    if(!edit)return;var node=ev.target;if(!node||!node.closest)return;
+    if(node.closest('a,button'))ev.preventDefault();
+    choose(node,f);
+  },true);}
   if(!d.body.dataset.aixInputBound){d.body.dataset.aixInputBound='1';d.addEventListener('input',function(ev){if(ev.target.closest('[data-aix-editable]')){dirty=true;status('수정 중 · 저장을 눌러 변경 내용을 보관하세요.');requestAnimationFrame(function(){if(typeof fitFrame==='function')fitFrame(f);});}});}
 }
-function setFrames(arr){loading=true;frames.forEach(function(f,i){f.setAttribute('srcdoc',arr[i]||original[i]);});loading=false;dirty=false;}
+function setFrames(arr){chosen=null;target=null;activeFrame=null;updatePicked();loading=true;frames.forEach(function(f,i){f.setAttribute('srcdoc',arr[i]||original[i]);});loading=false;dirty=false;}
 function useCurrent(){var data=stored();if(data&&Array.isArray(data.tabs)&&data.tabs.length===frames.length){setFrames(data.tabs);status('저장된 '+label()+'을 불러왔습니다.');}else{setFrames(original);status('원본에서 '+label()+'을 시작합니다.');}}
 function label(){return current==='main'?'기본안':current==='a'?'시안 A':'시안 B';}
 frames.forEach(function(f){f.addEventListener('load',function(){toggleFrame(f);if(typeof fitFrame==='function')setTimeout(function(){fitFrame(f);},70);});});
+function getScopeNode(el,scope){if(!el)return null;if(scope==='self')return el;
+  if(scope==='parent')return el.parentElement&&el.parentElement!==el.ownerDocument.body?el.parentElement:el;
+  var selectors=scope==='card'?'.course,.fcard,.pchip,.card,.step,.phase,.eff,.point,.mod,.item,.box,.col,.flow-box,.node,.summary,.benefit,.panel,.unit,.module,.roadmap-card,.route-box,.path-step,.block,.info-box,.stat,.highlight,.why,.reason': 'section,.step,.phase,.col,.studios,.board,.flow,.flow-row,.row,.sec,.module-section,.card,.wrap,.hero,.course,.fcard';
+  var n=el.closest(selectors);return n&&n!==el.ownerDocument.body?n:el;}
+function updatePicked(){var el=target,box=document.getElementById('aix-picked');
+  if(!el||!el.isConnected){target=null;box.textContent='선택된 요소 없음';return;}
+  var desc=(el.textContent||'').replace(/\s+/g,' ').trim().slice(0,85);
+  box.textContent=(['self','card','section','parent'].indexOf(currentScope)+1)+'. '+el.tagName.toLowerCase()+(el.className&&typeof el.className==='string'?' · '+el.className.slice(0,55):'')+' — '+(desc||'(텍스트 없음)');
+  var st=el.ownerDocument.defaultView.getComputedStyle(el);
+  document.getElementById('aix-font-size').value=Math.round(parseFloat(st.fontSize))||14;
+  document.getElementById('aix-padding').value=Math.round(parseFloat(st.paddingTop))||0;
+}
+function choose(el,f){if(chosen&&chosen.isConnected)chosen.removeAttribute('data-aix-picked');activeFrame=f;chosen=el;target=getScopeNode(el,currentScope);if(target)target.setAttribute('data-aix-picked','1');updatePicked();}
+function touched(msg){dirty=true;status(msg||'변경 사항이 있습니다. 저장 버튼을 눌러 보관하세요.');if(activeFrame&&typeof fitFrame==='function')requestAnimationFrame(function(){fitFrame(activeFrame);});}
+function mustTarget(){if(!edit){status('먼저 화면 직접 편집하기를 켜주세요.');return false;}if(!target||!target.isConnected){status('수정할 요소를 화면에서 먼저 클릭하세요.');return false;}return true;}
 window.AIXEditor={
+ scope:function(v){currentScope=v;if(chosen&&activeFrame)choose(chosen,activeFrame);},
+ move:function(direction){if(!mustTarget())return;var p=target.parentElement;if(!p)return;var sib=direction<0?target.previousElementSibling:target.nextElementSibling;if(!sib){status('해당 방향으로 이동할 요소가 없습니다.');return;}if(direction<0)p.insertBefore(target,sib);else p.insertBefore(sib,target);touched('요소 순서를 변경했습니다.');},
+ duplicate:function(){if(!mustTarget())return;var clone=target.cloneNode(true);clone.removeAttribute('data-aix-picked');target.after(clone);choose(clone,activeFrame);touched('요소를 복제했습니다. 복제된 내용도 직접 편집할 수 있습니다.');},
+ remove:function(){if(!mustTarget())return;if(!confirm('선택한 요소를 삭제할까요?'))return;target.remove();target=null;chosen=null;updatePicked();touched('선택한 요소가 삭제되었습니다.');},
+ addText:function(){if(!mustTarget())return;var e=target.ownerDocument.createElement('p');e.textContent='새로운 내용을 입력하세요';e.setAttribute('contenteditable','true');e.setAttribute('data-aix-editable','1');e.style.padding='8px';target.after(e);choose(e,activeFrame);e.focus();touched('새 글상자를 추가했습니다.');},
+ editText:function(){if(!mustTarget())return;var e=target;if(e.children.length&&currentScope!=='self'){status('복잡한 박스 전체 대신 내부 제목이나 본문을 클릭하고 내용을 편집하세요.');return;}e.setAttribute('contenteditable','true');e.setAttribute('data-aix-editable','1');e.focus();status('선택한 텍스트를 직접 수정하세요.');},
+ style:function(prop,value){if(!mustTarget())return;target.style[prop]=value;touched('선택한 요소의 스타일을 변경했습니다.');},
+ clearStyles:function(){if(!mustTarget())return;target.removeAttribute('style');updatePicked();touched('선택 요소의 인라인 스타일을 초기화했습니다.');},
  panel:function(open){var p=document.getElementById('aix-admin-panel');p.classList.toggle('open',typeof open==='boolean'?open:!p.classList.contains('open'));},
- toggle:function(v){edit=!!v;frames.forEach(toggleFrame);status(edit?'편집 모드 ON · 각 탭의 글자를 클릭해 수정하세요.':'편집 모드 OFF · 변경 사항을 저장하거나 HTML 파일로 내려받으세요.');},
+ toggle:function(v){edit=!!v;if(!edit){target=null;chosen=null;updatePicked();}frames.forEach(toggleFrame);status(edit?'편집 모드 ON · 각 탭의 글자를 클릭해 수정하세요.':'편집 모드 OFF · 변경 사항을 저장하거나 HTML 파일로 내려받으세요.');},
  save:function(){var tabs=snapshotCurrent().map(cleanDoc);if(setStored({tabs:tabs,savedAt:new Date().toISOString()})){dirty=false;status('✓ '+label()+' 저장 완료 · 이 브라우저에 보관되었습니다.');}},
  exportFile:function(){var exported=snapshotCurrent().map(cleanDoc);var root=document.documentElement.cloneNode(true);root.querySelectorAll('.doc-frame').forEach(function(f,i){f.setAttribute('srcdoc',exported[i]);});var statusBox=root.querySelector('#aix-edit-status');if(statusBox)statusBox.textContent='공유받은 HTML 파일입니다. 설정에서 편집하거나 다른 시안으로 저장할 수 있습니다.';var checkbox=root.querySelector('#aix-edit-toggle');if(checkbox)checkbox.removeAttribute('checked');var panel=root.querySelector('#aix-admin-panel');if(panel)panel.classList.remove('open');var sel=root.querySelector('#aix-version');if(sel)sel.value='main';
    var html='<!DOCTYPE html>\n'+root.outerHTML;
